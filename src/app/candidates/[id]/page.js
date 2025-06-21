@@ -1,5 +1,6 @@
 import Link from "next/link";
 import "../../page.css";
+import { headers } from "next/headers";
 
 export default async function CandidateDetail({ params }) {
   const { id } = params;
@@ -7,8 +8,10 @@ export default async function CandidateDetail({ params }) {
   let error = null;
   let debug = {};
   try {
-    const base = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-    const url = `${base}/api/candidates/${id}`;
+    const headersList = headers();
+    const host = headersList.get("host");
+    const protocol = headersList.get("x-forwarded-proto") || "http";
+    const url = `${protocol}://${host}/api/candidates/${id}`;
     debug.url = url;
     const res = await fetch(url, { cache: 'no-store' });
     debug.status = res.status;
