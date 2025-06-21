@@ -1,0 +1,66 @@
+/* mpp/src/app/page.css */
+.candidates-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 16px;
+}
+
+.candidates-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.candidate-card {
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 18px;
+  transition: box-shadow 0.2s, border-color 0.2s;
+  min-height: 280px;
+  text-decoration: none;
+  color: inherit;
+}
+.candidate-card:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+  border-color: #3b82f6;
+}
+.candidate-card img {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #f3f4f6;
+  margin-bottom: 12px;
+}
+.candidate-card h2 {
+  color: #202020;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+  text-align: center;
+}
+.candidate-card p {
+  font-size: 0.95rem;
+  color: #6b7280;
+  margin-bottom: 8px;
+  text-align: center;
+}
+.candidate-card .partid {
+  background: #eff6ff;
+  color: #2563eb;
+  border-radius: 8px;
+  padding: 2px 10px;
+  font-size: 0.85rem;
+  margin-bottom: 8px;
+  display: inline-block;
+}
+.candidate-card .arrow {
+  font-size: 1.5rem;
+  color: #9ca3af;
+  margin-top: auto;
+}
