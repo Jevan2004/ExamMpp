@@ -61,7 +61,7 @@ export default function CandidatesPage() {
         c.id === editId ? { ...c, ...form } : c
       ));
       setEditId(null);
-      setNotification("Candidatul a fost actualizat!");
+      // setNotification("Candidatul a fost actualizat!");
     } else {
       const res = await fetch("/api/candidates", {
         method: "POST",
@@ -70,19 +70,19 @@ export default function CandidatesPage() {
       });
       const newCandidate = await res.json();
       setCandidates([newCandidate, ...candidates]);
-      setNotification("Candidatul a fost adăugat!");
+      // setNotification("Candidatul a fost adăugat!");
     }
     setForm({ nume: "", descriere: "", partid: "", imagine: "" });
     setShowForm(false);
-    setTimeout(() => setNotification(""), 2000);
+    // setTimeout(() => setNotification(""), 2000);
   };
 
   const handleDelete = async (id) => {
     if (window.confirm('Sigur vrei să ștergi acest candidat?')) {
       await fetch(`/api/candidates/${id}`, { method: "DELETE" });
       setCandidates(candidates.filter(c => c.id !== id));
-      setNotification("Candidatul a fost șters!");
-      setTimeout(() => setNotification(""), 2000);
+      // setNotification("Candidatul a fost șters!");
+      // setTimeout(() => setNotification(""), 2000);
     }
   };
 
@@ -151,19 +151,7 @@ export default function CandidatesPage() {
 
   return (
     <div className="candidates-container">
-      {notification && (
-        <div style={{
-          background: "#2563eb",
-          color: "#fff",
-          padding: "12px 24px",
-          borderRadius: 8,
-          marginBottom: 16,
-          textAlign: "center",
-          fontWeight: 600
-        }}>
-          {notification}
-        </div>
-      )}
+
       <div style={{ marginBottom: 32, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
         <div>
           <h1 style={{ fontSize: "2rem", fontWeight: "bold", marginBottom: 8 }}>Candidații:</h1>
