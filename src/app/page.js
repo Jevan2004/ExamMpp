@@ -61,7 +61,6 @@ export default function CandidatesPage() {
         c.id === editId ? { ...c, ...form } : c
       ));
       setEditId(null);
-      // setNotification("Candidatul a fost actualizat!");
     } else {
       const res = await fetch("/api/candidates", {
         method: "POST",
@@ -70,11 +69,9 @@ export default function CandidatesPage() {
       });
       const newCandidate = await res.json();
       setCandidates([newCandidate, ...candidates]);
-      // setNotification("Candidatul a fost adăugat!");
     }
     setForm({ nume: "", descriere: "", partid: "", imagine: "" });
     setShowForm(false);
-    // setTimeout(() => setNotification(""), 2000);
   };
 
   const handleDelete = async (id) => {
