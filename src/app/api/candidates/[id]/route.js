@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getCandidateById, updateCandidate, deleteCandidate } from "../data";
+import { getCandidateById, updateCandidate, deleteCandidate, addCandidate } from "../data";
 
 export async function GET(_, { params }) {
   const candidate = getCandidateById(params.id);
@@ -24,4 +24,13 @@ export async function DELETE(_, { params }) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
   return NextResponse.json({ success: true });
+}
+
+export async function POST(request) {
+  const data = await request.json();
+  if (!data.nume || !data.descriere || !data.partid || !data.imagine) {
+    return NextResponse.json({ error: "Missing fields" }, { status: 400 });
+  }
+  const newCandidate = addCandidate(data);
+  return NextResponse.json(newCandidate, { status: 201 });
 } 

@@ -1,6 +1,6 @@
-"use client"
+"use client";
 import Link from "next/link";
-import "./page.css"; // Import the CSS file
+import "./page.css";
 import { useState, useRef, useEffect } from "react";
 import { Bar } from 'react-chartjs-2';
 import {
@@ -15,69 +15,6 @@ import {
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-const predefinedCandidates = [
-  {
-    nume: "Ion Popescu",
-    descriere: "Vreau să schimb România în bine!",
-    partid: "Independent",
-    imagine: "dog.jpg"
-  },
-  {
-    nume: "Maria Ionescu",
-    descriere: "Educația este prioritatea mea.",
-    partid: "AUR",
-    imagine: "dog.jpg"
-  },
-  {
-    nume: "Vasile Georgescu",
-    descriere: "Sănătatea pentru toți!",
-    partid: "PSD",
-    imagine: "cabral.jpg"
-  },
-  {
-    nume: "Elena Dumitru",
-    descriere: "Susțin tinerii antreprenori.",
-    partid: "Independent",
-    imagine: "cabral.jpg"
-  },
-  {
-    nume: "Radu Mihai",
-    descriere: "Un oraș mai curat pentru toți.",
-    partid: "Cainii poporului",
-    imagine: "images.jpg"
-  },
-  {
-    nume: "Simona Petrescu",
-    descriere: "Transparență și corectitudine.",
-    partid: "AUR",
-    imagine: "images.jpg"
-  },
-  {
-    nume: "Cristian Stan",
-    descriere: "Infrastructură modernă acum!",
-    partid: "Progresul Infrastructurii",
-    imagine: "cristian.jpg"
-  },
-  {
-    nume: "Ana Pop",
-    descriere: "Sprijin pentru familii.",
-    partid: "Familia Înainte",
-    imagine: "ana.jpg"
-  },
-  {
-    nume: "Mihai Tudor",
-    descriere: "Digitalizarea administrației.",
-    partid: "Digital România",
-    imagine: "mihai.jpg"
-  },
-  {
-    nume: "Gabriela Dobre",
-    descriere: "Cultură și tradiție.",
-    partid: "Cultura Românească",
-    imagine: "gabriela.jpg"
-  }
-];
-
 export default function CandidatesPage() {
   const [candidates, setCandidates] = useState([]);
   const [showForm, setShowForm] = useState(false);
@@ -90,8 +27,8 @@ export default function CandidatesPage() {
   const [editId, setEditId] = useState(null);
   const [generating, setGenerating] = useState(false);
   const intervalRef = useRef(null);
-  const predefinedIndex = useRef(0);
   const [loading, setLoading] = useState(true);
+  const [notification, setNotification] = useState("");
 
   // Fetch all candidates on mount
   useEffect(() => {
@@ -120,23 +57,32 @@ export default function CandidatesPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
+      setCandidates(candidates.map(c =>
+        c.id === editId ? { ...c, ...form } : c
+      ));
       setEditId(null);
+      setNotification("Candidatul a fost actualizat!");
     } else {
-      await fetch("/api/candidates", {
+      const res = await fetch("/api/candidates", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
+      const newCandidate = await res.json();
+      setCandidates([newCandidate, ...candidates]);
+      setNotification("Candidatul a fost adăugat!");
     }
     setForm({ nume: "", descriere: "", partid: "", imagine: "" });
     setShowForm(false);
-    fetchCandidates();
+    setTimeout(() => setNotification(""), 2000);
   };
 
   const handleDelete = async (id) => {
     if (window.confirm('Sigur vrei să ștergi acest candidat?')) {
       await fetch(`/api/candidates/${id}`, { method: "DELETE" });
-      fetchCandidates();
+      setCandidates(candidates.filter(c => c.id !== id));
+      setNotification("Candidatul a fost șters!");
+      setTimeout(() => setNotification(""), 2000);
     }
   };
 
@@ -155,8 +101,9 @@ export default function CandidatesPage() {
     if (intervalRef.current) return;
     setGenerating(true);
     intervalRef.current = setInterval(async () => {
-      await fetch("/api/candidates/generate", { method: "POST" });
-      fetchCandidates();
+      const res = await fetch("/api/candidates/generate", { method: "POST" });
+      const newCandidate = await res.json();
+      setCandidates(prev => [newCandidate, ...prev]);
     }, 1000);
   };
 
@@ -204,6 +151,19 @@ export default function CandidatesPage() {
 
   return (
     <div className="candidates-container">
+      {notification && (
+        <div style={{
+          background: "#2563eb",
+          color: "#fff",
+          padding: "12px 24px",
+          borderRadius: 8,
+          marginBottom: 16,
+          textAlign: "center",
+          fontWeight: 600
+        }}>
+          {notification}
+        </div>
+      )}
       <div style={{ marginBottom: 32, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
         <div>
           <h1 style={{ fontSize: "2rem", fontWeight: "bold", marginBottom: 8 }}>Candidații:</h1>
